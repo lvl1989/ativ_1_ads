@@ -1,20 +1,9 @@
-"""
-Cadastro de Pacientes — versão Gradio (execução local)
-Atividade Prática Aula 1 — Interfaces Web/Mobile para Coleta de Dados
-
-Como rodar:
-    pip install -r ../requirements.txt
-    python app.py
-Depois abra http://127.0.0.1:7860 no navegador.
-"""
 import os
 from datetime import datetime
-
 import gradio as gr
 from zoneinfo import ZoneInfo
 import pandas as pd
 
-# O CSV é salvo na mesma pasta deste arquivo, independente de onde o script é chamado
 PASTA = os.path.dirname(os.path.abspath(__file__))
 ARQUIVO_CSV = os.path.join(PASTA, "pacientes.csv")
 
@@ -22,16 +11,16 @@ COLUNAS = [
     "timestamp", "nome", "data_nascimento", "idade", "telefone",
     "convenio", "prioridade", "motivo",
 ]
-FUSO = ZoneInfo("America/Sao_Paulo")  # servidores (ex.: Streamlit Cloud) rodam em UTC
-CONVENIOS = ["Particular", "Unimed", "Bradesco Saúde", "SulAmérica", "Outro"]
 
+FUSO = ZoneInfo("America/Sao_Paulo")  # servidores (ex.: Streamlit Cloud) rodam em UTC
+
+CONVENIOS = ["Particular", "Unimed", "Bradesco Saúde", "SulAmérica", "Outro"]
 
 def ultimos_pacientes(n=5):
     """Lê o CSV (se existir) e devolve as últimas n linhas."""
     if os.path.exists(ARQUIVO_CSV):
         return pd.read_csv(ARQUIVO_CSV).tail(n)
     return pd.DataFrame(columns=COLUNAS)
-
 
 def cadastrar_paciente(nome, data_nascimento, idade, telefone, convenio, prioridade, motivo):
     # Validações simples antes de gravar
@@ -57,7 +46,6 @@ def cadastrar_paciente(nome, data_nascimento, idade, telefone, convenio, priorid
     }
     novo = pd.DataFrame([linha], columns=COLUNAS)
 
-    # Primeira execução: cria o arquivo com cabeçalho. Depois: só acrescenta linhas.
     if os.path.exists(ARQUIVO_CSV):
         novo.to_csv(ARQUIVO_CSV, mode="a", header=False, index=False)
     else:
@@ -66,7 +54,7 @@ def cadastrar_paciente(nome, data_nascimento, idade, telefone, convenio, priorid
     return f"✅ Paciente {linha['nome']} cadastrado com sucesso!", ultimos_pacientes()
 
 
-# Layout em coluna única (sem gr.Row com várias colunas) para funcionar bem no celular
+# layout em coluna única (sem gr.Row com várias colunas) melhor no celular
 with gr.Blocks(title="Cadastro de Pacientes") as demo:
     gr.Markdown("## 🏥 Cadastro de Pacientes\nRecepção — preencha os dados do paciente que chegou.")
 
