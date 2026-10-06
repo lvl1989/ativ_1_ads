@@ -1,16 +1,4 @@
-"""
-Cadastro de Pacientes — versão Streamlit (deploy no Streamlit Community Cloud)
-Atividade Prática Aula 1 — Interfaces Web/Mobile para Coleta de Dados
-
-Como rodar localmente:
-    pip install -r ../requirements.txt
-    streamlit run app.py
-
-Atenção: no Streamlit Community Cloud o sistema de arquivos é efêmero.
-Por isso os dados ficam em st.session_state e são exportados pelo botão "Baixar CSV".
-"""
 from datetime import date, datetime
-
 import pandas as pd
 from zoneinfo import ZoneInfo
 import streamlit as st
@@ -19,14 +7,13 @@ COLUNAS = [
     "timestamp", "nome", "data_nascimento", "idade", "telefone",
     "convenio", "prioridade", "motivo",
 ]
-FUSO = ZoneInfo("America/Sao_Paulo")  # servidores (ex.: Streamlit Cloud) rodam em UTC
+FUSO = ZoneInfo("America/Sao_Paulo")  # servidores rodam em UTC
 CONVENIOS = ["Particular", "Unimed", "Bradesco Saúde", "SulAmérica", "Outro"]
 
 st.set_page_config(page_title="Cadastro de Pacientes", page_icon="🏥", layout="centered")
 st.title("🏥 Cadastro de Pacientes")
 st.caption("Recepção — preencha os dados do paciente que chegou.")
 
-# Acumula os pacientes cadastrados durante a sessão
 if "pacientes" not in st.session_state:
     st.session_state.pacientes = pd.DataFrame(columns=COLUNAS)
 
